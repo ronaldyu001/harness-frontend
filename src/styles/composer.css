@@ -1,0 +1,291 @@
+/* ─────────────────────────────────────────────────────────────
+   Composer: the floating input surface
+   ───────────────────────────────────────────────────────────── */
+
+.composer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 13px 15px 10px;
+  border-radius: 22px;
+  background: var(--glass);
+  backdrop-filter: blur(26px) saturate(1.06);
+  -webkit-backdrop-filter: blur(26px) saturate(1.06);
+  border: 1px solid var(--border-soft);
+  box-shadow:
+    var(--highlight-inner),
+    0 1px 2px rgba(8, 6, 5, 0.22),
+    0 12px 40px rgba(8, 6, 5, 0.26);
+  transition:
+    border-color 220ms ease,
+    box-shadow 260ms ease,
+    background 220ms ease;
+  cursor: text;
+}
+
+.composer:focus-within {
+  border-color: rgba(217, 154, 110, 0.36);
+  box-shadow:
+    var(--highlight-inner),
+    0 0 0 3.5px rgba(217, 154, 110, 0.08),
+    0 2px 5px rgba(8, 6, 5, 0.26),
+    0 20px 56px rgba(8, 6, 5, 0.38);
+}
+
+.composer--temp {
+  border-style: dashed;
+  border-color: rgba(217, 154, 110, 0.3);
+}
+
+.composer--dragging {
+  border-color: rgba(217, 154, 110, 0.55);
+  border-style: dashed;
+  background: rgba(40, 32, 26, 0.85);
+}
+
+/* ── Input area ── */
+
+.composer__input {
+  position: relative;
+  overflow: hidden;
+  min-height: 24px;
+}
+
+.composer__input textarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  resize: none;
+  background: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-primary);
+  caret-color: var(--accent);
+  overflow-y: auto;
+}
+
+.composer__input textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.composer__input textarea:focus-visible {
+  box-shadow: none;
+}
+
+.composer__replica {
+  visibility: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 15px;
+  line-height: 24px;
+  min-height: 24px;
+  pointer-events: none;
+}
+
+/* ── Controls row ── */
+
+.composer__row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.composer__spacer {
+  flex: 1;
+}
+
+.composer__hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-right: 9px;
+}
+
+.composer__model-slot {
+  position: relative;
+}
+
+.model-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--text-secondary);
+  padding: 6.5px 10px;
+  border-radius: 9px;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.model-chip:hover,
+.model-chip--open {
+  background: rgba(235, 218, 199, 0.06);
+  color: var(--text-primary);
+}
+
+.model-chip__chev {
+  display: grid;
+  place-items: center;
+  color: var(--text-tertiary);
+}
+
+/* ── Send / stop ── */
+
+.send-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #e9ae7f, #c98354);
+  color: var(--accent-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 1px 3px rgba(8, 6, 5, 0.4);
+  transition:
+    filter var(--dur-fast) ease,
+    background var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    color var(--dur-med) ease;
+}
+
+.send-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.send-btn:disabled {
+  background: rgba(235, 218, 199, 0.06);
+  color: var(--text-faint);
+  box-shadow: none;
+}
+
+.send-btn--stop {
+  background: var(--surface-3);
+  color: var(--accent-strong);
+  border: 1px solid rgba(217, 154, 110, 0.4);
+  box-shadow: 0 0 0 3px rgba(217, 154, 110, 0.07);
+}
+
+.send-btn--stop:hover {
+  background: #37302a;
+  filter: none;
+}
+
+/* ── Attachments ── */
+
+.composer__chips {
+  overflow: hidden;
+}
+
+.composer__chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 11px;
+}
+
+.attachment-chip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5.5px 9px 5.5px 6px;
+  border-radius: 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-faint);
+  box-shadow: var(--highlight-inner);
+  max-width: 230px;
+  cursor: default;
+}
+
+.attachment-chip__icon {
+  flex: none;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+}
+
+.attachment-chip__icon--document { background: rgba(217, 154, 110, 0.13); color: var(--accent); }
+.attachment-chip__icon--image    { background: rgba(163, 185, 143, 0.13); color: #a3b98f; }
+.attachment-chip__icon--code     { background: rgba(219, 185, 138, 0.12); color: #dbb98a; }
+.attachment-chip__icon--data     { background: rgba(201, 154, 140, 0.13); color: #c99a8c; }
+
+.attachment-chip__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.attachment-chip__name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment-chip__size {
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+}
+
+.attachment-chip__remove {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 19px;
+  height: 19px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-soft);
+  color: var(--text-secondary);
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) ease,
+    background var(--dur-fast) ease;
+}
+
+.attachment-chip:hover .attachment-chip__remove,
+.attachment-chip__remove:focus-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.attachment-chip__remove:hover {
+  color: #f0e4d6;
+  background: #3a322c;
+}
+
+/* ── Drop state ── */
+
+.composer__drop {
+  position: absolute;
+  inset: 5px;
+  z-index: 5;
+  border-radius: 18px;
+  border: 1.5px dashed rgba(217, 154, 110, 0.55);
+  background: rgba(22, 18, 15, 0.78);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 550;
+  pointer-events: none;
+}
